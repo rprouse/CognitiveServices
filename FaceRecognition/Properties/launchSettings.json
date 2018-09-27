@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FaceRecognition": {
+      "commandName": "Project",
+      "commandLineArgs": "C:\\Users\\rob\\OneDrive\\Pictures\\RProuse-234.jpg"
+    }
+  }
+}
