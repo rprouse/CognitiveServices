@@ -21,23 +21,21 @@ namespace FaceRecognition
             Console.WriteLine($"Performing face detection on {imageFilePath}");
             Console.WriteLine();
 
-            if (File.Exists(imageFilePath))
-            {
-                // Execute the REST API call.
-                try
-                {
-                    string json = await FaceDetection.MakeAnalysisRequest(imageFilePath);
-
-                    Console.WriteLine(json.PrettyPrint());
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine(e.Message);
-                }
-            }
-            else
+            if (!File.Exists(imageFilePath))
             {
                 Console.WriteLine("File does not exist");
+                return;
+            }
+
+            try
+            {
+                string json = await FaceDetection.MakeAnalysisRequest(imageFilePath);
+
+                Console.WriteLine(json.PrettyPrint());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
 
             Console.WriteLine();
