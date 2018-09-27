@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using FaceRecognition.Extensions;
 using FaceRecognition.Services;
 
 namespace FaceRecognition
@@ -17,23 +18,26 @@ namespace FaceRecognition
 
             string imageFilePath = args[0];
 
+            Console.WriteLine($"Performing face detection on {imageFilePath}");
+            Console.WriteLine();
+
             if (File.Exists(imageFilePath))
             {
                 // Execute the REST API call.
                 try
                 {
-                    await FaceDetection.MakeAnalysisRequest(imageFilePath);
+                    string json = await FaceDetection.MakeAnalysisRequest(imageFilePath);
+
+                    Console.WriteLine(json.PrettyPrint());
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine();
                     Console.WriteLine(e.Message);
                 }
             }
             else
             {
-                Console.WriteLine();
-                Console.WriteLine("Invalid file path.");
+                Console.WriteLine("File does not exist");
             }
 
             Console.WriteLine();

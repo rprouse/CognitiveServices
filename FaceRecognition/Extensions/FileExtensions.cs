@@ -5,7 +5,7 @@ namespace FaceRecognition.Extensions
     /// <summary>
     /// Extensions for loading files from strings
     /// </summary>
-    public static class File
+    public static class FileExtensions
     {
         /// <summary>
         /// Returns the contents of the specified file as a byte array.

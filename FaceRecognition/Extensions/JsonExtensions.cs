@@ -3,7 +3,7 @@ using System.Text;
 
 namespace FaceRecognition.Extensions
 {
-    public static class Json
+    public static class JsonExtensions
     {
         /// <summary>
         /// Formats the given JSON string by adding line breaks and indents.
