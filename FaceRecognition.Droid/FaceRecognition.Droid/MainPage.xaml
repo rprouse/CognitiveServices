@@ -8,10 +8,12 @@
     <Grid.RowDefinitions>
       <RowDefinition Height="*" />
       <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
 
     <Image x:Name="PhotoImage" />
     <Button x:Name="CameraButton" Text="Take Photo" Grid.Row="1" />
+    <Button x:Name="AnalyzeButton" Text="Analyze Photo" Grid.Row="2" IsEnabled="False" />
   </Grid>
 
 </ContentPage>
