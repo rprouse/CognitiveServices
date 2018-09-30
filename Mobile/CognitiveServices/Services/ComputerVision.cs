@@ -22,7 +22,7 @@ namespace CognitiveServices.Services
             VisualFeatureTypes.Tags
         };
 
-        public static async Task<ImageAnalysis> MakeAnalysisRequest(MediaFile file)
+        private static ComputerVisionClient CreateClient()
         {
             var client = new ComputerVisionClient(
                 new ApiKeyServiceClientCredentials(apiToken),
@@ -30,9 +30,48 @@ namespace CognitiveServices.Services
 
             client.Endpoint = uriBase;
 
+            return client;
+        }
+
+        public static async Task<ImageAnalysis> MakeAnalysisRequest(MediaFile file)
+        {
             using (var stream = file.GetStream())
             {
-                return await client.AnalyzeImageInStreamAsync(stream, features);
+                return await CreateClient().AnalyzeImageInStreamAsync(stream, features);
+            }
+        }
+
+        public static async Task<OcrResult> MakeOcrRequest(MediaFile file)
+        {
+            using (var stream = file.GetStream())
+            {
+                return await CreateClient().RecognizePrintedTextInStreamAsync(true, stream, OcrLanguages.En);
+            }
+        }
+
+        public static async Task<RecognitionResult> MakeTextRequest(MediaFile file)
+        {
+            using (var stream = file.GetStream())
+            {
+                var client = CreateClient();
+                RecognizeTextInStreamHeaders headers = await client.RecognizeTextInStreamAsync(stream, TextRecognitionMode.Handwritten);
+                if (headers?.OperationLocation == null) return null;
+
+                // Extract the operation id from the url
+                string operationId = headers.OperationLocation.Substring(headers.OperationLocation.Length - 36);
+                TextOperationResult result = await client.GetTextOperationResultAsync(operationId);
+
+                // Wait for the operation to complete
+                int i = 0;
+                int maxRetries = 10;
+                while ((result.Status == TextOperationStatusCodes.Running ||
+                        result.Status == TextOperationStatusCodes.NotStarted) && i++ < maxRetries)
+                {
+                    await Task.Delay(1000);
+
+                    result = await client.GetTextOperationResultAsync(operationId);
+                }
+                return result.RecognitionResult;
             }
         }
     }

@@ -23,6 +23,7 @@
       <RowDefinition Height="*" />
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
+      <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
     <Grid.ColumnDefinitions>
       <ColumnDefinition Width="*" />
@@ -35,6 +36,8 @@
     <Button x:Name="SelectPhotoButton" Text="Select Photo" Grid.Row="1" Grid.Column="1" />
     <Button x:Name="AnalyzeFacesButton" Text="Analyze Faces" Grid.Row="2" Grid.Column="0" IsEnabled="False" />
     <Button x:Name="AnalyzePhotoButton" Text="Analyze Photo" Grid.Row="2" Grid.Column="1" IsEnabled="False" />
+    <Button x:Name="AnalyzeOcrButton" Text="OCR" Grid.Row="3" Grid.Column="0" IsEnabled="False" />
+    <Button x:Name="AnalyzeTextButton" Text="Handwriting" Grid.Row="3" Grid.Column="1" IsEnabled="False" />
   </Grid>
 
 </ContentPage>

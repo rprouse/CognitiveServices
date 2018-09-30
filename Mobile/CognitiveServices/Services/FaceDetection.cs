@@ -27,17 +27,21 @@ namespace CognitiveServices.Services
             FaceAttributeType.Smile
         };
 
-        public static async Task<IList<DetectedFace>> MakeAnalysisRequest(MediaFile file)
+        private static FaceClient CreateClient()
         {
             var client = new FaceClient(
                 new ApiKeyServiceClientCredentials(apiToken),
                 new DelegatingHandler[] { });
 
             client.Endpoint = uriBase;
+            return client;
+        }
 
+        public static async Task<IList<DetectedFace>> MakeAnalysisRequest(MediaFile file)
+        {
             using (var stream = file.GetStream())
             {
-                return await client.Face.DetectWithStreamAsync(stream, true, false, faceAttributes);
+                return await CreateClient().Face.DetectWithStreamAsync(stream, true, false, faceAttributes);
             }
         }
     }

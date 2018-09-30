@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using CognitiveServices.Services;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
 using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
@@ -22,50 +23,66 @@ namespace CognitiveServices
             SelectPhotoButton.Clicked += OnSelectPhoto;
             AnalyzeFacesButton.Clicked += OnAnalyzeFaces;
             AnalyzePhotoButton.Clicked += OnAnalyzePhoto;
+            AnalyzeOcrButton.Clicked += OnAnalyzeOcr;
+            AnalyzeTextButton.Clicked += OnAnalyzeText;
         }
 
         private async void OnTakePhoto(object sender, EventArgs e)
         {
             EnableAnayzeButtons(false);
 
-            await CrossMedia.Current.Initialize();
-
-            if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+            try
             {
-                await DisplayAlert("No Camera", "Camera is not available.", "OK");
-                TakePhotoButton.IsEnabled = false;
-                return;
+                await CrossMedia.Current.Initialize();
+
+                if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
+                {
+                    await DisplayAlert("No Camera", "Camera is not available.", "OK");
+                    TakePhotoButton.IsEnabled = false;
+                    return;
+                }
+
+                var photo = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+                {
+                    Directory = "Faces",
+                    PhotoSize = PhotoSize.Medium,
+                    SaveToAlbum = true
+                });
+
+                SetPhoto(photo);
             }
-
-            var photo = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+            finally
             {
-                Directory = "Faces",
-                PhotoSize = PhotoSize.Medium,
-                SaveToAlbum = true
-            });
-
-            SetPhoto(photo);
+                EnableAnayzeButtons(_photo != null);
+            }
         }
 
         private async void OnSelectPhoto(object sender, EventArgs e)
         {
             EnableAnayzeButtons(false);
 
-            await CrossMedia.Current.Initialize();
-
-            if (!CrossMedia.Current.IsPickPhotoSupported)
+            try
             {
-                await DisplayAlert("No Gallery", "Access to the gallery is not available.", "OK");
-                SelectPhotoButton.IsEnabled = false;
-                return;
+                await CrossMedia.Current.Initialize();
+
+                if (!CrossMedia.Current.IsPickPhotoSupported)
+                {
+                    await DisplayAlert("No Gallery", "Access to the gallery is not available.", "OK");
+                    SelectPhotoButton.IsEnabled = false;
+                    return;
+                }
+
+                var photo = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
+                {
+                    PhotoSize = PhotoSize.Medium
+                });
+
+                SetPhoto(photo);
             }
-
-            var photo = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
+            finally
             {
-                PhotoSize = PhotoSize.Medium
-            });
-
-            SetPhoto(photo);
+                EnableAnayzeButtons(_photo != null);
+            }
         }
 
         private void SetPhoto(MediaFile photo)
@@ -74,7 +91,6 @@ namespace CognitiveServices
 
             _photo = photo;
             PhotoImage.Source = ImageSource.FromStream(() => _photo.GetStream());
-            EnableAnayzeButtons(true);
         }
 
         private void EnableAllButtons(bool enabled)
@@ -89,6 +105,8 @@ namespace CognitiveServices
         {
             AnalyzeFacesButton.IsEnabled = enabled;
             AnalyzePhotoButton.IsEnabled = enabled;
+            AnalyzeOcrButton.IsEnabled = enabled;
+            AnalyzeTextButton.IsEnabled = enabled;
         }
 
         private async void OnAnalyzeFaces(object sender, EventArgs e)
@@ -132,6 +150,73 @@ namespace CognitiveServices
             catch (Exception ex)
             {
                 await DisplayAlert("Analysis Error", ex.Message, "OK");
+            }
+            finally
+            {
+                EnableAllButtons(true);
+            }
+        }
+
+        private async void OnAnalyzeOcr(object sender, EventArgs e)
+        {
+            if (_photo == null) return;
+            EnableAllButtons(false);
+            try
+            {
+                OcrResult result = await ComputerVision.MakeOcrRequest(_photo);
+                ActivityIndicator.IsRunning = false;
+                if ((result?.Regions.Count ?? 0) == 0)
+                {
+                    await DisplayAlert("OCR Result", "No text found", "OK");
+                    return;
+                }
+
+                var text = new StringBuilder();
+                foreach(var region in result.Regions)
+                {
+                    foreach(var line in region.Lines)
+                    {
+                        text.AppendLine( string.Join(" ", line.Words.Select(w => w.Text)));
+                    }
+                    text.AppendLine();
+                }
+
+                await DisplayAlert("OCR Result", text.ToString(), "OK");
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("OC Error", ex.Message, "OK");
+            }
+            finally
+            {
+                EnableAllButtons(true);
+            }
+        }
+
+        private async void OnAnalyzeText(object sender, EventArgs e)
+        {
+            if (_photo == null) return;
+            EnableAllButtons(false);
+            try
+            {
+                RecognitionResult result = await ComputerVision.MakeTextRequest(_photo);
+                ActivityIndicator.IsRunning = false;
+                if (result == null)
+                {
+                    await DisplayAlert("Text Result", "No text found", "OK");
+                    return;
+                }
+
+                var text = new StringBuilder();
+                foreach (var line in result.Lines)
+                {
+                    text.AppendLine(string.Join(" ", line.Text));
+                }
+                await DisplayAlert("Text Result", text.ToString(), "OK");
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Text Error", ex.Message, "OK");
             }
             finally
             {
