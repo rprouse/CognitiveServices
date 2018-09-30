@@ -11,9 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FaceRecognition.Console", "Console\FaceRecognition.Console.csproj", "{D2430DDD-6AF2-46FF-90F9-0DCC530B04FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaceRecognition.Core", "Mobile\FaceRecognition.Droid\FaceRecognition.Droid.csproj", "{EC39D51C-BE17-40CC-9211-9B52D92A3A63}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FaceRecognition.Droid", "Mobile\FaceRecognition.Droid\FaceRecognition.Droid.csproj", "{EC39D51C-BE17-40CC-9211-9B52D92A3A63}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FaceRecognition.Droid", "Mobile\FaceRecognition.Core\FaceRecognition.Core.csproj", "{112FE5C3-3195-4597-8AFE-4C1394E904D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FaceRecognition.Core", "Mobile\FaceRecognition.Core\FaceRecognition.Core.csproj", "{112FE5C3-3195-4597-8AFE-4C1394E904D2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mobile", "Mobile", "{EA627F4A-D98A-4896-98BD-4988BFEEE905}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Console", "Console", "{D624F20B-8791-4C49-85B6-67AEF252E134}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +42,11 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D2430DDD-6AF2-46FF-90F9-0DCC530B04FD} = {D624F20B-8791-4C49-85B6-67AEF252E134}
+		{EC39D51C-BE17-40CC-9211-9B52D92A3A63} = {EA627F4A-D98A-4896-98BD-4988BFEEE905}
+		{112FE5C3-3195-4597-8AFE-4C1394E904D2} = {EA627F4A-D98A-4896-98BD-4988BFEEE905}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7A2C9039-E30A-4C15-90F3-C08594FA742F}

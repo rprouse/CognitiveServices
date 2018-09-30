@@ -99,8 +99,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FaceRecognition.Core\FaceRecognition.Core.csproj">
-      <Project>{F31C9330-D6FE-48D1-B233-98880F3EFF78}</Project>
-      <Name>FaceRecognition.Droid</Name>
+      <Project>{112FE5C3-3195-4597-8AFE-4C1394E904D2}</Project>
+      <Name>FaceRecognition.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
