@@ -39,7 +39,8 @@ namespace FaceRecognition.Droid
             _file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
             {
                 Directory = "Faces",
-                PhotoSize = PhotoSize.Medium
+                PhotoSize = PhotoSize.Medium,
+                SaveToAlbum = true
             });
 
             if (_file == null)
