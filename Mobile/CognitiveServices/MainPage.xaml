@@ -30,6 +30,7 @@
     </Grid.ColumnDefinitions>
 
     <Image x:Name="PhotoImage" Source="AzureCognitiveServices.png" Aspect="AspectFit" Grid.ColumnSpan="2" />
+    <ActivityIndicator x:Name="ActivityIndicator" Color="#0079D5" IsRunning="False" Grid.ColumnSpan="2" Margin="48" />
     <Button x:Name="TakePhotoButton" Text="Take Photo" Grid.Row="1" Grid.Column="0" />
     <Button x:Name="SelectPhotoButton" Text="Select Photo" Grid.Row="1" Grid.Column="1" />
     <Button x:Name="AnalyzeFacesButton" Text="Analyze Faces" Grid.Row="2" Grid.Column="0" IsEnabled="False" />

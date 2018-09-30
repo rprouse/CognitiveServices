@@ -79,6 +79,7 @@ namespace CognitiveServices
 
         private void EnableAllButtons(bool enabled)
         {
+            ActivityIndicator.IsRunning = !enabled;
             TakePhotoButton.IsEnabled = enabled;
             SelectPhotoButton.IsEnabled = enabled;
             EnableAnayzeButtons(enabled);
@@ -98,9 +99,11 @@ namespace CognitiveServices
             {
                 IList<DetectedFace> faces = await FaceDetection.MakeAnalysisRequest(_photo);
                 DetectedFace face = faces.FirstOrDefault();
+                ActivityIndicator.IsRunning = false;
                 if (face == null)
                 {
                     await DisplayAlert("Face Analysis", "No Faces Found", "OK");
+                    return;
                 }
                 string smiling = face.FaceAttributes.Smile >= 0.75 ? "smiling" : "not smiling";
                 var analysis = $"{face.FaceAttributes.Age} year old {face.FaceAttributes.Gender} who is {smiling}.";
@@ -110,7 +113,10 @@ namespace CognitiveServices
             {
                 await DisplayAlert("Analysis Error", ex.Message, "OK");
             }
-            EnableAllButtons(true);
+            finally
+            {
+                EnableAllButtons(true);
+            }
         }
 
         private async void OnAnalyzePhoto(object sender, EventArgs e)
@@ -120,13 +126,17 @@ namespace CognitiveServices
             try
             {
                 ImageAnalysis analysis = await ComputerVision.MakeAnalysisRequest(_photo);
+                ActivityIndicator.IsRunning = false;
                 await DisplayAlert("Image Analysis", analysis?.Description.Captions.FirstOrDefault()?.Text, "OK");
             }
             catch (Exception ex)
             {
                 await DisplayAlert("Analysis Error", ex.Message, "OK");
             }
-            EnableAllButtons(true);
+            finally
+            {
+                EnableAllButtons(true);
+            }
         }
     }
 }
