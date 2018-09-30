@@ -13,12 +13,12 @@
       <Style TargetType="Button">
         <Setter Property="BackgroundColor" Value="#0079D5" />
         <Setter Property="TextColor" Value="White" />
-        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="1" />
       </Style>
     </ResourceDictionary>
   </ContentPage.Resources>
 
-  <Grid ColumnSpacing="0" RowSpacing="0">
+  <Grid ColumnSpacing="0" RowSpacing="0" BackgroundColor="White">
     <Grid.RowDefinitions>
       <RowDefinition Height="*" />
       <RowDefinition Height="Auto" />

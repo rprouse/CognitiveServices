@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using CognitiveServices.Services;
+using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
 using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
@@ -11,20 +12,19 @@ namespace CognitiveServices
 {
     public partial class MainPage : ContentPage
     {
-        MediaFile _file;
-        FaceDetection _faceDetection;
+        MediaFile _photo;
 
         public MainPage()
         {
             InitializeComponent();
 
-            _faceDetection = new FaceDetection(this);
-
-            TakePhotoButton.Clicked += OnCameraButtonClicked;
-            AnalyzeFacesButton.Clicked += OnAnalyzeButtonClicked;
+            TakePhotoButton.Clicked += OnTakePhoto;
+            SelectPhotoButton.Clicked += OnSelectPhoto;
+            AnalyzeFacesButton.Clicked += OnAnalyzeFaces;
+            AnalyzePhotoButton.Clicked += OnAnalyzePhoto;
         }
 
-        private async void OnCameraButtonClicked(object sender, EventArgs e)
+        private async void OnTakePhoto(object sender, EventArgs e)
         {
             EnableAnayzeButtons(false);
 
@@ -32,42 +32,101 @@ namespace CognitiveServices
 
             if (!CrossMedia.Current.IsCameraAvailable || !CrossMedia.Current.IsTakePhotoSupported)
             {
-                await DisplayAlert("No Camera", ":( No camera available.", "OK");
+                await DisplayAlert("No Camera", "Camera is not available.", "OK");
+                TakePhotoButton.IsEnabled = false;
                 return;
             }
 
-            _file = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
+            var photo = await CrossMedia.Current.TakePhotoAsync(new StoreCameraMediaOptions
             {
                 Directory = "Faces",
                 PhotoSize = PhotoSize.Medium,
                 SaveToAlbum = true
             });
 
-            if (_file == null) return;
+            SetPhoto(photo);
+        }
 
-            PhotoImage.Source = ImageSource.FromStream(() => _file.GetStream());
+        private async void OnSelectPhoto(object sender, EventArgs e)
+        {
+            EnableAnayzeButtons(false);
 
+            await CrossMedia.Current.Initialize();
+
+            if (!CrossMedia.Current.IsPickPhotoSupported)
+            {
+                await DisplayAlert("No Gallery", "Access to the gallery is not available.", "OK");
+                SelectPhotoButton.IsEnabled = false;
+                return;
+            }
+
+            var photo = await CrossMedia.Current.PickPhotoAsync(new PickMediaOptions
+            {
+                PhotoSize = PhotoSize.Medium
+            });
+
+            SetPhoto(photo);
+        }
+
+        private void SetPhoto(MediaFile photo)
+        {
+            if (photo == null) return;
+
+            _photo = photo;
+            PhotoImage.Source = ImageSource.FromStream(() => _photo.GetStream());
             EnableAnayzeButtons(true);
         }
 
-        private async void OnAnalyzeButtonClicked(object sender, EventArgs e)
+        private void EnableAllButtons(bool enabled)
         {
-            if (_file == null) return;
-            IList<DetectedFace> faces = await _faceDetection.MakeAnalysisRequest(_file);
-            DetectedFace face = faces.FirstOrDefault();
-            if (face == null)
-            {
-                await DisplayAlert("Face Analysis", "No Faces Found", "OK");
-            }
-            string smiling = face.FaceAttributes.Smile >= 0.75 ? "smiling" : "not smiling";
-            var analysis = $"{face.FaceAttributes.Age} year old {face.FaceAttributes.Gender} who is {smiling}.";
-            await DisplayAlert("Face Analysis", analysis, "OK");
+            TakePhotoButton.IsEnabled = enabled;
+            SelectPhotoButton.IsEnabled = enabled;
+            EnableAnayzeButtons(enabled);
         }
 
         private void EnableAnayzeButtons(bool enabled)
         {
             AnalyzeFacesButton.IsEnabled = enabled;
             AnalyzePhotoButton.IsEnabled = enabled;
+        }
+
+        private async void OnAnalyzeFaces(object sender, EventArgs e)
+        {
+            if (_photo == null) return;
+            EnableAllButtons(false);
+            try
+            {
+                IList<DetectedFace> faces = await FaceDetection.MakeAnalysisRequest(_photo);
+                DetectedFace face = faces.FirstOrDefault();
+                if (face == null)
+                {
+                    await DisplayAlert("Face Analysis", "No Faces Found", "OK");
+                }
+                string smiling = face.FaceAttributes.Smile >= 0.75 ? "smiling" : "not smiling";
+                var analysis = $"{face.FaceAttributes.Age} year old {face.FaceAttributes.Gender} who is {smiling}.";
+                await DisplayAlert("Face Analysis", analysis, "OK");
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Analysis Error", ex.Message, "OK");
+            }
+            EnableAllButtons(true);
+        }
+
+        private async void OnAnalyzePhoto(object sender, EventArgs e)
+        {
+            if (_photo == null) return;
+            EnableAllButtons(false);
+            try
+            {
+                ImageAnalysis analysis = await ComputerVision.MakeAnalysisRequest(_photo);
+                await DisplayAlert("Image Analysis", analysis?.Description.Captions.FirstOrDefault()?.Text, "OK");
+            }
+            catch (Exception ex)
+            {
+                await DisplayAlert("Analysis Error", ex.Message, "OK");
+            }
+            EnableAllButtons(true);
         }
     }
 }

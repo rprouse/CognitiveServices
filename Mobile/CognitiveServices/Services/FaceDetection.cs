@@ -1,16 +1,16 @@
 ﻿using System.Collections.Generic;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.Azure.CognitiveServices.Vision.Face;
 using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
 using Plugin.Media.Abstractions;
-using Xamarin.Forms;
 
 namespace CognitiveServices.Services
 {
-    public class FaceDetection
+    public static class FaceDetection
     {
-        // Add a class Secret with a property ApiToken with the API Token from Azure
-        static readonly string apiToken = Secret.ApiToken;
+        // Add a class Secret with a property FaceApiToken with the API Token from Azure
+        static readonly string apiToken = Secret.FaceApiToken;
 
         const string uriBase = "https://eastus.api.cognitive.microsoft.com";
 
@@ -27,32 +27,18 @@ namespace CognitiveServices.Services
             FaceAttributeType.Smile
         };
 
-        Page _parent;
-
-        public FaceDetection(Page parent)
-        {
-            _parent = parent;
-        }
-
-        public async Task<IList<DetectedFace>> MakeAnalysisRequest(MediaFile file)
+        public static async Task<IList<DetectedFace>> MakeAnalysisRequest(MediaFile file)
         {
             var client = new FaceClient(
                 new ApiKeyServiceClientCredentials(apiToken),
-                new System.Net.Http.DelegatingHandler[] { });
+                new DelegatingHandler[] { });
+
             client.Endpoint = uriBase;
 
-            try
+            using (var stream = file.GetStream())
             {
-                using (var stream = file.GetStream())
-                {
-                    return await client.Face.DetectWithStreamAsync(stream, true, false, faceAttributes);
-                }
+                return await client.Face.DetectWithStreamAsync(stream, true, false, faceAttributes);
             }
-            catch (APIErrorException e)
-            {
-                await _parent.DisplayAlert("Analysis Error", e.Message, "OK");
-            }
-            return new List<DetectedFace>();
         }
     }
 }
