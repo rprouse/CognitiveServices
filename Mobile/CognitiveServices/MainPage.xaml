@@ -4,16 +4,36 @@
              xmlns:local="clr-namespace:CognitiveServices"
              x:Class="CognitiveServices.MainPage">
 
-  <Grid>
+  <ContentPage.Resources>
+    <ResourceDictionary>
+      <Style TargetType="Image">
+        <Setter Property="Margin" Value="0" />
+        <Setter Property="BackgroundColor" Value="White" />
+      </Style>
+      <Style TargetType="Button">
+        <Setter Property="BackgroundColor" Value="#0079D5" />
+        <Setter Property="TextColor" Value="White" />
+        <Setter Property="Padding" Value="0" />
+      </Style>
+    </ResourceDictionary>
+  </ContentPage.Resources>
+
+  <Grid ColumnSpacing="0" RowSpacing="0">
     <Grid.RowDefinitions>
       <RowDefinition Height="*" />
       <RowDefinition Height="Auto" />
       <RowDefinition Height="Auto" />
     </Grid.RowDefinitions>
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
 
-    <Image x:Name="PhotoImage" />
-    <Button x:Name="CameraButton" Text="Take Photo" Grid.Row="1" />
-    <Button x:Name="AnalyzeButton" Text="Analyze Photo" Grid.Row="2" IsEnabled="False" />
+    <Image x:Name="PhotoImage" Source="AzureCognitiveServices.png" Aspect="AspectFit" Grid.ColumnSpan="2" />
+    <Button x:Name="TakePhotoButton" Text="Take Photo" Grid.Row="1" Grid.Column="0" />
+    <Button x:Name="SelectPhotoButton" Text="Select Photo" Grid.Row="1" Grid.Column="1" />
+    <Button x:Name="AnalyzeFacesButton" Text="Analyze Faces" Grid.Row="2" Grid.Column="0" IsEnabled="False" />
+    <Button x:Name="AnalyzePhotoButton" Text="Analyze Photo" Grid.Row="2" Grid.Column="1" IsEnabled="False" />
   </Grid>
 
 </ContentPage>

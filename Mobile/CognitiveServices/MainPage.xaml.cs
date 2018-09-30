@@ -20,13 +20,13 @@ namespace CognitiveServices
 
             _faceDetection = new FaceDetection(this);
 
-            CameraButton.Clicked += OnCameraButtonClicked;
-            AnalyzeButton.Clicked += OnAnalyzeButtonClicked;
+            TakePhotoButton.Clicked += OnCameraButtonClicked;
+            AnalyzeFacesButton.Clicked += OnAnalyzeButtonClicked;
         }
 
         private async void OnCameraButtonClicked(object sender, EventArgs e)
         {
-            AnalyzeButton.IsEnabled = false;
+            EnableAnayzeButtons(false);
 
             await CrossMedia.Current.Initialize();
 
@@ -43,16 +43,11 @@ namespace CognitiveServices
                 SaveToAlbum = true
             });
 
-            if (_file == null)
-                return;
+            if (_file == null) return;
 
-            PhotoImage.Source = ImageSource.FromStream(() =>
-            {
-                var stream = _file.GetStream();
-                return stream;
-            });
+            PhotoImage.Source = ImageSource.FromStream(() => _file.GetStream());
 
-            AnalyzeButton.IsEnabled = true;
+            EnableAnayzeButtons(true);
         }
 
         private async void OnAnalyzeButtonClicked(object sender, EventArgs e)
@@ -64,8 +59,15 @@ namespace CognitiveServices
             {
                 await DisplayAlert("Face Analysis", "No Faces Found", "OK");
             }
-            string smiling = face.FaceAttributes.Smile >= 0.75 ? "smiling" : "not smiling";            var analysis = $"{face.FaceAttributes.Age} year old {face.FaceAttributes.Gender} who is {smiling}.";
+            string smiling = face.FaceAttributes.Smile >= 0.75 ? "smiling" : "not smiling";
+            var analysis = $"{face.FaceAttributes.Age} year old {face.FaceAttributes.Gender} who is {smiling}.";
             await DisplayAlert("Face Analysis", analysis, "OK");
+        }
+
+        private void EnableAnayzeButtons(bool enabled)
+        {
+            AnalyzeFacesButton.IsEnabled = enabled;
+            AnalyzePhotoButton.IsEnabled = enabled;
         }
     }
 }
