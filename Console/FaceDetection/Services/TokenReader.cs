@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace FaceRecognition.Services
+namespace FaceDetection.Services
 {
     public static class TokenReader
     {

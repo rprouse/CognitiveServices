@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using FaceRecognition.Droid.Services;
+using CognitiveServices.Services;
 using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
 using Plugin.Media;
 using Plugin.Media.Abstractions;
 using Xamarin.Forms;
 
-namespace FaceRecognition.Droid
+namespace CognitiveServices
 {
     public partial class MainPage : ContentPage
     {

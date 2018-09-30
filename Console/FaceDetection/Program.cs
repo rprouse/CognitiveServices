@@ -1,10 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
-using FaceRecognition.Extensions;
-using FaceRecognition.Services;
+using FaceDetection.Extensions;
+using FaceDetection.Services;
 
-namespace FaceRecognition
+namespace FaceDetection
 {
     static class Program
     {
@@ -12,7 +12,7 @@ namespace FaceRecognition
         {
             if(args.Length != 1)
             {
-                Console.WriteLine(@"Usage: FaceRecognition C:\path\to\image.jpg");
+                Console.WriteLine(@"Usage: FaceDetection C:\path\to\image.jpg");
                 return;
             }
 
@@ -29,7 +29,7 @@ namespace FaceRecognition
 
             try
             {
-                string json = await FaceDetection.MakeAnalysisRequest(imageFilePath);
+                string json = await FaceDetectionApi.MakeAnalysisRequest(imageFilePath);
 
                 Console.WriteLine(json.PrettyPrint());
             }

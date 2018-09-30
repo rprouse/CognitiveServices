@@ -2,11 +2,11 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using FaceRecognition.Extensions;
+using FaceDetection.Extensions;
 
-namespace FaceRecognition.Services
+namespace FaceDetection.Services
 {
-    public static class FaceDetection
+    public static class FaceDetectionApi
     {
         static readonly string apiToken = TokenReader.GetApiToken();
 

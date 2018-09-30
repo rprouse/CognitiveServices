@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace FaceRecognition.Extensions
+namespace FaceDetection.Extensions
 {
     /// <summary>
     /// Extensions for loading files from strings

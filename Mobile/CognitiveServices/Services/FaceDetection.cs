@@ -5,7 +5,7 @@ using Microsoft.Azure.CognitiveServices.Vision.Face.Models;
 using Plugin.Media.Abstractions;
 using Xamarin.Forms;
 
-namespace FaceRecognition.Droid.Services
+namespace CognitiveServices.Services
 {
     public class FaceDetection
     {

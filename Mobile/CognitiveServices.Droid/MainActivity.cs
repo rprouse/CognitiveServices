@@ -2,11 +2,10 @@
 using Android.App;
 using Android.Content.PM;
 using Android.OS;
-using CognitiveServices.Droid;
 using Plugin.CurrentActivity;
 using Plugin.Permissions;
 
-namespace FaceRecognition.Droid.Droid
+namespace CognitiveServices.Droid
 {
     [Activity(Label = "Cognitive Services Demo", Icon = "@mipmap/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation)]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace FaceRecognition.Extensions
+namespace FaceDetection.Extensions
 {
     public static class JsonExtensions
     {
