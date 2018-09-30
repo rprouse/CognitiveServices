@@ -9,9 +9,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: global::Android.Runtime.ResourceDesignerAttribute("FaceRecognition.Droid.Droid.Resource", IsApplication=true)]
+[assembly: global::Android.Runtime.ResourceDesignerAttribute("FaceRecognition.Droid.Resource", IsApplication=true)]
 
-namespace FaceRecognition.Droid.Droid
+namespace FaceRecognition.Droid
 {
 	
 	
@@ -26,7 +26,7 @@ namespace FaceRecognition.Droid.Droid
 		
 		public static void UpdateIdValues()
 		{
-			global::Xamarin.Forms.Platform.Android.Resource.Attribute.actionBarSize = global::FaceRecognition.Droid.Droid.Resource.Attribute.actionBarSize;
+			global::Xamarin.Forms.Platform.Android.Resource.Attribute.actionBarSize = global::FaceRecognition.Droid.Resource.Attribute.actionBarSize;
 		}
 		
 		public partial class Animation
